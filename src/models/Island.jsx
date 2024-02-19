@@ -10,10 +10,15 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
   const { nodes, materials, animations } = useGLTF(islandScene);
   const {actions} = useAnimations(animations, islandRef)
 
-  
+  const lastY = useRef(0);
   const lastX = useRef(0);// Use a ref for the last mouse x position
   const rotationSpeed = useRef(0);// Use a ref for rotation speed
   const dampingFactor = 0.95;// Define a damping factor to control rotation damping
+
+
+  const selfRotate = (object, speed) => {
+    object.rotation.y -= speed;
+  };
 
   // Handle pointer (mouse or touch) down event
   const handlerPointerDown = (e) => {
@@ -126,6 +131,8 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
 
       islandRef.current.rotation.y += rotationSpeed.current;
     } else {
+      rotationSpeed.current = 0.001 * Math.PI;
+    selfRotate(islandRef.current, rotationSpeed.current);
       // When rotating, determine the current stage based on island's orientation
       const rotation = islandRef.current.rotation.y;
 
