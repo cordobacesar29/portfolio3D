@@ -41,7 +41,7 @@ const HomeInfo = ({ currentStage }: Props) => {
           about the impact?
         </p>
 
-        <Link to="/proyects" className="neo-brutalism-white neo-btn">
+        <Link to="/projects" className="neo-brutalism-white neo-btn">
           Visit my portfolio
           <img src={arrow} alt="arrow" className="w-4 h-4 object-contain" />
         </Link>
