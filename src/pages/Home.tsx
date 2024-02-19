@@ -1,14 +1,7 @@
 import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Loader } from "../components/Loader";
-//@ts-ignore
-import Island from "../models/Island";
-//@ts-ignore
-import Sky from "../models/Sky";
-//@ts-ignore
-import Bird from "../models/Bird";
-//@ts-ignore
-import Plane from "../models/Plane";
+import { Bird, Island, Plane, Sky } from "../models";
 import HomeInfo from "../components/HomeInfo";
 
 export const Home = () => {
@@ -72,8 +65,8 @@ export const Home = () => {
             setIsRotating={setIsRotating}
           />
           <Plane
-            planeScale={planeScale}
-            planePosition={planePosition}
+            scale={planeScale}
+            position={planePosition}
             isRotating={isRotating}
             rotation={[0, 20, 0]}
           />
