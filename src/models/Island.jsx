@@ -87,6 +87,9 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
     canvas.addEventListener('pointermove', handlerPointerMove);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+    canvas.addEventListener("touchstart", handlePointerDown);
+    canvas.addEventListener("touchmove", handlePointerMove);
+    canvas.addEventListener("touchend", handlePointerUp);
 
     // Remove event listeners when component unmounts
     return () => {
@@ -95,6 +98,9 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
       canvas.removeEventListener('pointermove', handlerPointerMove);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
+      canvas.removeEventListener("touchstart", handlePointerDown);
+      canvas.removeEventListener("touchmove", handlePointerMove);
+      canvas.removeEventListener("touchend", handlePointerUp);
     }
   }, [gl, handlerPointerDown, handlerPointerDown, handlerPointerMove])
   
