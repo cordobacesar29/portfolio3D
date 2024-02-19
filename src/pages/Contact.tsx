@@ -1,5 +1,10 @@
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import { Canvas } from "@react-three/fiber";
+import { Loader, Preload } from "@react-three/drei";
+import useAlert from "../hooks/useAlert";
+import Alert from "../components/Alert";
+import { Fox } from "../models";
 
 interface IForm {
   name: string;
@@ -15,6 +20,8 @@ export const Contact = () => {
   const formRef = useRef(null);
   const [form, setForm] = useState<IForm>(initialForm);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentAnimation, setcurrentAnimation] = useState("idle");
+  const { alert, hideAlert, showAlert } = useAlert();
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,6 +30,7 @@ export const Contact = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setIsLoading(true);
+    setcurrentAnimation("hit");
 
     emailjs
       .send(
@@ -39,18 +47,35 @@ export const Contact = () => {
       )
       .then(() => {
         setIsLoading(false);
-        setForm(initialForm);
+        showAlert({
+          text: "Message sent successfully",
+          type: "success",
+        });
+        setcurrentAnimation("walk");
+
+        setTimeout(() => {
+          hideAlert();
+          setcurrentAnimation("idle");
+          setForm(initialForm);
+        }, 2000);
       })
       .catch((error: Error) => {
         setIsLoading(false);
+        setcurrentAnimation("idle");
         console.log(error);
+
+        showAlert({
+          text: "I didn't receive your message 😢",
+          type: "danger",
+        });
       });
   };
-  const handleFocus = () => {};
-  const handleBlur = () => {};
+  const handleFocus = () => setcurrentAnimation("walk");
+  const handleBlur = () => setcurrentAnimation("idle");
 
   return (
     <section className="relative flex lg:flex-row flex-col max-container">
+      {alert.show && <Alert {...alert} />}
       <div className="flex-1 min-w-[50%] flex flex-col">
         <h1 className="head-text">Get in Touch</h1>
         <form
@@ -108,6 +133,35 @@ export const Contact = () => {
             {isLoading ? "Sending..." : "Send Message"}
           </button>
         </form>
+      </div>
+      <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
+        <Canvas
+          camera={{
+            position: [0, 0, 5],
+            fov: 75,
+            near: 0.1,
+            far: 1000,
+          }}
+        >
+          <directionalLight intensity={2.5} position={[0, 0, 1]} />
+          <ambientLight intensity={0.5} />
+          <pointLight position={[5, 10, 0]} intensity={2} />
+          <spotLight
+            position={[10, 10, 10]}
+            angle={0.15}
+            penumbra={1}
+            intensity={2}
+          />
+          <Suspense fallback={<Loader />}>
+            <Fox
+              currentAnimation={currentAnimation}
+              position={[0.5, 0.35, 0]}
+              rotation={[12.6, -0.6, 0]}
+              scale={[0.5, 0.5, 0.5]}
+            />
+          </Suspense>
+          <Preload all/>
+        </Canvas>
       </div>
     </section>
   );
