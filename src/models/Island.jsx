@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import islandScene from "../assets/3d/island.glb";
@@ -7,7 +7,8 @@ import islandScene from "../assets/3d/island.glb";
 const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
   const islandRef = useRef()
   const {gl, viewport} = useThree()// Get access to the Three.js renderer and viewport
-  const { nodes, materials } = useGLTF(islandScene);
+  const { nodes, materials, animations } = useGLTF(islandScene);
+  const {actions} = useAnimations(animations, islandRef)
 
   
   const lastX = useRef(0);// Use a ref for the last mouse x position
@@ -80,6 +81,14 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
   };
 
   useEffect(()=> {
+    if(isRotating) {
+      actions["Take 001"]?.play();
+    } else {
+      actions["Take 001"]?.stop();
+    }
+  }, [actions, isRotating])
+
+  useEffect(()=> {
      // Add event listeners for pointer and keyboard event
     const canvas = gl.domElement;
     canvas.addEventListener('pointerdown', handlerPointerDown);
@@ -87,9 +96,9 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
     canvas.addEventListener('pointermove', handlerPointerMove);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
-    canvas.addEventListener("touchstart", handlePointerDown);
-    canvas.addEventListener("touchmove", handlePointerMove);
-    canvas.addEventListener("touchend", handlePointerUp);
+    canvas.addEventListener("touchstart", handlerPointerDown);
+    canvas.addEventListener("touchmove", handlerPointerUp);
+    canvas.addEventListener("touchend", handlerPointerMove);
 
     // Remove event listeners when component unmounts
     return () => {
@@ -98,9 +107,9 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
       canvas.removeEventListener('pointermove', handlerPointerMove);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
-      canvas.removeEventListener("touchstart", handlePointerDown);
-      canvas.removeEventListener("touchmove", handlePointerMove);
-      canvas.removeEventListener("touchend", handlePointerUp);
+      canvas.removeEventListener("touchstart", handlerPointerDown);
+      canvas.removeEventListener("touchmove", handlerPointerMove);
+      canvas.removeEventListener("touchend", handlerPointerUp);
     }
   }, [gl, handlerPointerDown, handlerPointerDown, handlerPointerMove])
   
