@@ -1,15 +1,15 @@
-import hero from './hero.jpg'
-import meta from './meta.png'
-import shopify from './shopify.png'
-import starbucks from './starbucks.png'
-import tesla from './tesla.png'
+import scale from './scale.jpg'
+import atygg from './atygg_blue_logo.png'
+import solutions from './4isolutions-favicon.png'
+import approach from './approachTech.svg'
+import touchoftech from './touchoftech.png'
 import logo from './logo.svg'
 
 export {
-    hero,
-    meta,
-    shopify,
-    starbucks,
-    tesla,
+    scale,
+    atygg,
+    solutions,
+    approach,
+    touchoftech,
     logo
 }
