@@ -102,8 +102,8 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     canvas.addEventListener("touchstart", handlerPointerDown);
-    canvas.addEventListener("touchmove", handlerPointerUp);
-    canvas.addEventListener("touchend", handlerPointerMove);
+    canvas.addEventListener("touchmove", handlerPointerMove);
+    canvas.addEventListener("touchend", handlerPointerUp);
 
     // Remove event listeners when component unmounts
     return () => {
