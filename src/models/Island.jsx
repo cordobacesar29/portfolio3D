@@ -10,7 +10,6 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
   const { nodes, materials, animations } = useGLTF(islandScene);
   const {actions} = useAnimations(animations, islandRef)
 
-  const lastY = useRef(0);
   const lastX = useRef(0);// Use a ref for the last mouse x position
   const rotationSpeed = useRef(0);// Use a ref for rotation speed
   const dampingFactor = 0.95;// Define a damping factor to control rotation damping
@@ -23,7 +22,6 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
   // Handle pointer (mouse or touch) down event
   const handlerPointerDown = (e) => {
     e.stopPropagation()
-    e.preventDefault()
     setIsRotating(true)
 
   // Calculate the clientX based on whether it's a touch event or a mouse event
@@ -36,14 +34,12 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
   // Handle pointer (mouse or touch) up event
   const handlerPointerUp = (e) => {
     e.stopPropagation()
-    e.preventDefault()
     setIsRotating(false)
   }
 
   // Handle pointer (mouse or touch) move event
   const handlerPointerMove = (e) => {
     e.stopPropagation()
-    e.preventDefault()
     if (isRotating) {
       // If rotation is enabled, calculate the change in clientX position
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -101,9 +97,9 @@ const Island = ({isRotating, setIsRotating, setCurrentStage, ...props}) => {
     canvas.addEventListener('pointermove', handlerPointerMove);
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
-    canvas.addEventListener("touchstart", handlerPointerDown);
-    canvas.addEventListener("touchmove", handlerPointerMove);
-    canvas.addEventListener("touchend", handlerPointerUp);
+    canvas.addEventListener("touchstart", handlerPointerDown, {passive: true});
+    canvas.addEventListener("touchmove", handlerPointerMove, {passive: true});
+    canvas.addEventListener("touchend", handlerPointerUp, {passive: true});
 
     // Remove event listeners when component unmounts
     return () => {
